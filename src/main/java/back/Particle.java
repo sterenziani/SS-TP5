@@ -177,4 +177,9 @@ public class Particle {
 	public void setDesiredV(double desiredV) {
 		this.desiredV = desiredV;
 	}
+	
+	public boolean isNeighbor(Particle p2, double rc)
+	{
+		return Double.compare(Math.abs(getEdgeDistance(p2)), rc) <= 0;
+	}
 }

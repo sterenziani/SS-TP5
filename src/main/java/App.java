@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,8 @@ public class App
 		system.updateValues();
 		
 		unloadMap.put(t, N-system.getRemainingParticles());
-		while(t <= 5*60 && system.getRemainingParticles() > 0)
+		Instant startTime = Instant.now();
+		while(t <= 500 && system.getRemainingParticles() > 0)
 		{
 			if(N-system.getRemainingParticles() > evacuated)
 			{
@@ -41,9 +44,9 @@ public class App
 				System.out.println(t);
 			}
 			system.updateParticles();
-			System.out.println(t +"\t");
 			t += deltaT;
 		}
+		System.out.println("Finished in " +Duration.between(startTime, Instant.now()).toMinutes() +" mins");
 		unloadMap.put(t, N-system.getRemainingParticles());
 		
 		if(system.getRemainingParticles() == 0)

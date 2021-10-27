@@ -13,7 +13,7 @@ def main():
       j = 0
       radius = random.uniform(0.25, 0.29) # Diametro = (0.5, 0.58)
       x = random.uniform(0.5 + radius, width - 0.5 - radius)
-      y = random.uniform(1 + radius, height - 0.5 - radius)
+      y = random.uniform(0.5 + radius, height - 0.5 - radius)
 
       while (j < len(particles) and flag):
         if(sqrt((particles[j][0] - x)**2 + (particles[j][1] - y)**2) < radius + particles[j][2]):

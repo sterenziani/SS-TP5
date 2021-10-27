@@ -17,8 +17,11 @@ public class SimulationSystem
 	private static final double kn = 1.2 * Math.pow(10,5);
 	private static final double kt = 2.4 * Math.pow(10,5);
 	private static final double T = 0.5;
+	private static final double DOOR_MARGIN = 0.2;
 	private static final double GOAL_WIDTH = 3;
 	private static final double GOAL_Y = -10;
+	
+	private static final double rc = 2;
 	
 	private Map<Integer, Double> FmapX;
 	private Map<Integer, Double> FmapY;
@@ -36,12 +39,12 @@ public class SimulationSystem
 
 	public void updateValues()
 	{
+		Map<Integer, List<Particle>> neighbors = CellIndexFinder.findNeighbors(particles, height-GOAL_Y, rc);
 		for(Particle p : particles)
 		{
 			p.setPrevAx(p.getAx());
 			p.setPrevAy(p.getAy());
-			
-			updateForces(p);
+			updateForces(p, neighbors);
 			double Fx = FmapX.get(p.getId());
 			double Fy = FmapY.get(p.getId());
 			double m = p.getMass();
@@ -58,11 +61,12 @@ public class SimulationSystem
 	public void updateParticles()
 	{
 		List<Particle> removed = new ArrayList<>();
+		Map<Integer, List<Particle>> neighbors = CellIndexFinder.findNeighbors(particles, height-GOAL_Y, rc);
 		for(Particle p : particles)
 		{
 			double ax = p.getAx();
 			double ay = p.getAy();
-			updateForces(p);
+			updateForces(p, neighbors);
 			double Fx = FmapX.get(p.getId());
 			double Fy = FmapY.get(p.getId());
 			double m = p.getMass();
@@ -74,12 +78,12 @@ public class SimulationSystem
 		particles.removeAll(removed);
 	}
 	
-	public void updateForces(Particle p)
+	public void updateForces(Particle p, Map<Integer, List<Particle>> neighbors)
 	{
 		FmapX.put(p.getId(), 0.0);
 		FmapY.put(p.getId(), 0.0);
 		addGranularForce(p);
-		addSocialForce(p);
+		addSocialForce(p, neighbors.get(p.getId()));
 		addDesireForce(p);
 	}
 
@@ -169,11 +173,11 @@ public class SimulationSystem
 		FmapY.put(i.getId(), currentFy);
 	}
 
-	private void addSocialForce(Particle i)
+	private void addSocialForce(Particle i, List<Particle> neighbors)
 	{
 		double totalFSx = 0;
 		double totalFSy = 0;
-		for(Particle j: particles)
+		for(Particle j: neighbors)
 		{
 			if(j.getId() != i.getId())
 			{
@@ -224,9 +228,9 @@ public class SimulationSystem
 		if(p.getY() > 0)
 		{
 			if(p.getX() > width/2)
-				return Math.min(p.getX(), (width+gapSize-0.2)/2);
+				return Math.min(p.getX(), (width+gapSize-DOOR_MARGIN)/2);
 			else
-				return Math.max(p.getX(), (width-gapSize+0.2)/2);
+				return Math.max(p.getX(), (width-gapSize+DOOR_MARGIN)/2);
 		}
 		else
 		{
