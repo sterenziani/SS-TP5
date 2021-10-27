@@ -33,24 +33,6 @@ public class Output {
 		}
 		return file;
 	}
-		
-	public static void outputDataToFile()
-	{
-		/*
-		String outputFileName = OUTPUT_DIR +"/output.txt";
-    	File file = createFile(outputFileName, "t;x");
-        try (FileWriter writer = new FileWriter(file, true))
-        {
-        	for(Entry<Double, Double> e : entries)
-    			writer.write(e.getKey() +";" +e.getValue() +"\n");
-        	writer.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        */
-	}
     
     public static void resetFolder(String folderName)
     {
