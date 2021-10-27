@@ -22,21 +22,30 @@ public class App
 		
 		List<Particle> particles = input.getParticles();
 		int N = input.getN();
+		int evacuated = 0;
 		Map<Double, Integer> unloadMap = new HashMap<>();
 		SimulationSystem system = new SimulationSystem(input, deltaT);
 		system.updateValues();
+		
+		unloadMap.put(t, N-system.getRemainingParticles());
 		while(t <= 5*60 && system.getRemainingParticles() > 0)
 		{
-			unloadMap.put(t, N-system.getRemainingParticles());
+			if(N-system.getRemainingParticles() > evacuated)
+			{
+				evacuated = N-system.getRemainingParticles();
+				unloadMap.put(t, evacuated);
+			}
 			if( (int)(t/deltaT) % DT2 == 0 )
 			{
 				Output.outputAnimationFile(particles, t, (int)(t/(deltaT*DT2)));
 				System.out.println(t);
 			}
 			system.updateParticles();
-			System.out.println(t +"\t" +unloadMap.get(t));
+			System.out.println(t +"\t");
 			t += deltaT;
 		}
+		unloadMap.put(t, N-system.getRemainingParticles());
+		
 		if(system.getRemainingParticles() == 0)
 			System.out.println("EVERYBODY ESCAPED! t = " +t);
 		Output.outputMap(unloadMap);
