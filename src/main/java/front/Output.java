@@ -14,6 +14,7 @@ import back.Particle;
 
 public class Output {
 	public static String OUTPUT_DIR = "output/";
+	public static String RESULTS_DIR = "results/";
 	
 	private static File createFile(String outputFileName, String header)
 	{
@@ -45,6 +46,13 @@ public class Output {
         }
         folder.delete();
         folder.mkdir();        
+    }
+    
+    public static void createFolder(String folderName)
+    {
+    	File folder = new File(folderName);
+        if(!folder.exists())
+        	folder.mkdir();        
     }
 
     public static void createRoom(Input input) throws IOException
@@ -108,9 +116,12 @@ public class Output {
         }
     }
     
-    public static void outputMap(Map<Double, Integer> map)
+    public static void outputMap(Map<Double, Integer> map, double desiredV, int N, double d)
     {
-		String outputFileName = OUTPUT_DIR + "unloadEvolution.csv";
+    	createFolder(RESULTS_DIR);
+    	DecimalFormat df = new DecimalFormat("#.#");
+    	df.setMaximumFractionDigits(2);
+		String outputFileName = RESULTS_DIR + "timestamps-" +df.format(desiredV) +"-" +N +"-" +df.format(d) +".csv";
     	File file = createFile(outputFileName, "t;n");
     	List<Entry<Double, Integer>> entries = new ArrayList<Map.Entry<Double, Integer>>(map.entrySet());
     	Collections.sort(entries, new Comparator<Map.Entry<Double, Integer>>()

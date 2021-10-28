@@ -23,6 +23,7 @@ public class App
 		double t = 0.0;
 		
 		List<Particle> particles = input.getParticles();
+		double desiredV = particles.get(0).getDesiredV();
 		int N = input.getN();
 		int evacuated = 0;
 		Map<Double, Integer> unloadMap = new HashMap<>();
@@ -51,6 +52,6 @@ public class App
 		
 		if(system.getRemainingParticles() == 0)
 			System.out.println("EVERYBODY ESCAPED! t = " +t);
-		Output.outputMap(unloadMap);
+		Output.outputMap(unloadMap, desiredV, N, input.getGapSize());
 	}
 }
