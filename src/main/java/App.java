@@ -19,10 +19,11 @@ public class App
 		Input input = Parser.ParseInputFile("input.txt");
 		Output.resetFolder("output/");
 		Output.createRoom(input);
-		double deltaT = 0.0001;
+		List<Particle> particles = input.getParticles();
+		double deltaT = 0.001; //0.1 * Math.sqrt(particles.get(0).getMass() / SimulationSystem.kn);
+		System.out.println("dt = " +deltaT);
 		double t = 0.0;
 		
-		List<Particle> particles = input.getParticles();
 		double desiredV = particles.get(0).getDesiredV();
 		int N = input.getN();
 		int evacuated = 0;

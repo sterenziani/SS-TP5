@@ -106,7 +106,8 @@ public class Output {
         {
         	for(Particle p : particles)
         	{
-        		writer.write(String.valueOf(p.getX()) +"\t" +String.valueOf(p.getY()) +"\t" +String.valueOf(p.getRadius()) +"\n");
+        		double colorValue = 0.3 + p.getV()/4;
+        		writer.write(String.valueOf(p.getX()) +"\t" +String.valueOf(p.getY()) +"\t" +String.valueOf(p.getRadius()) +"\t" +colorValue +"\n");
         	}
         	writer.close();
         }

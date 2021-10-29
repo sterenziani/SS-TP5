@@ -5,6 +5,7 @@ def main():
     width = 20
     height = 20
     gapSize = 1.2
+    desiredV = 2
     file = open("input.txt", 'w')
     particles = []
     i = 0
@@ -12,6 +13,7 @@ def main():
       flag = True
       j = 0
       radius = random.uniform(0.25, 0.29) # Diametro = (0.5, 0.58)
+      mass = 80
       x = random.uniform(0.5 + radius, width - 0.5 - radius)
       y = random.uniform(0.5 + radius, height - 0.5 - radius)
 
@@ -22,15 +24,16 @@ def main():
           j = j+1
 
       if(flag):
-        particles.append([x,y,radius])
+        particles.append([x,y,radius,mass])
         i += 1
 
     file.write(str(width) + '\n')
     file.write(str(height) + '\n')
     file.write(str(gapSize) + '\n')
+    file.write(str(desiredV) + '\n')
     file.write(str(len(particles)) + '\n' + '\n')
     for p in particles:
-      file.write(str(p[0]) + '  ' + str(p[1]) + '  ' + str(p[2]) + '\n')
+      file.write(str(p[0]) + '  ' + str(p[1]) + '  ' + str(p[2]) + '  ' + str(p[3]) + '\n')
 
 if __name__ == "__main__":
     main()

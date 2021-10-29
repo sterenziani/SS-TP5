@@ -14,7 +14,7 @@ public class SimulationSystem
 	private double deltaT;
 	private static final int A = 2000;
 	private static final double B = 0.08;
-	private static final double kn = 1.2 * Math.pow(10,5);
+	public static final double kn = 1.2 * Math.pow(10,5);
 	private static final double kt = 2.4 * Math.pow(10,5);
 	private static final double T = 0.5;
 	private static final double DOOR_MARGIN = 0.2;
@@ -63,16 +63,10 @@ public class SimulationSystem
 		List<Particle> removed = new ArrayList<>();
 		Map<Integer, List<Particle>> neighbors = CellIndexFinder.findNeighbors(particles, height-GOAL_Y, rc);
 		for(Particle p : particles)
-		{
-			double ax = p.getAx();
-			double ay = p.getAy();
 			updateForces(p, neighbors);
-			double Fx = FmapX.get(p.getId());
-			double Fy = FmapY.get(p.getId());
-			double m = p.getMass();
-			p.setAx(Fx/m);
-			p.setAy(Fy/m);
-			if(beemanEvolve(p, ax, ay))
+		for(Particle p : particles)
+		{
+			if(beemanEvolve(p))
 				removed.add(p);
 		}
 		particles.removeAll(removed);
@@ -82,34 +76,35 @@ public class SimulationSystem
 	{
 		FmapX.put(p.getId(), 0.0);
 		FmapY.put(p.getId(), 0.0);
-		addGranularForce(p);
+		addGranularForce(p, neighbors.get(p.getId()));
 		addSocialForce(p, neighbors.get(p.getId()));
 		addDesireForce(p);
 	}
 
-	private boolean beemanEvolve(Particle p, double ax, double ay)
+	private boolean beemanEvolve(Particle p)
 	{
-		double nextAx = p.getAx();
-		double nextAy = p.getAy();
+		double Fx = FmapX.get(p.getId());
+		double Fy = FmapY.get(p.getId());
+		double nextAx = Fx/p.getMass();
+		double nextAy = Fy/p.getMass();
+		double ax = p.getAx();
+		double ay = p.getAy();
 		double prevAx = p.getPrevAx();
 		double prevAy = p.getPrevAy();
-		double nextX = p.getX() + p.getVx()*deltaT + (2.0/3.0)*p.getAx()*Math.pow(deltaT, 2) - (1.0/6.0)*p.getPrevAx()*Math.pow(deltaT, 2);
-		double nextY = p.getY() + p.getVy()*deltaT + (2.0/3.0)*p.getAy()*Math.pow(deltaT, 2) - (1.0/6.0)*p.getPrevAy()*Math.pow(deltaT, 2);
-		if(nextY < GOAL_Y)
-			return true;
-		
-		p.setX(nextX);
-		p.setY(nextY);
-		double nextVx = p.getVx() + deltaT*(2*nextAx + 5*ax - prevAx)/6;
-		double nextVy = p.getVy() + deltaT*(2*nextAy + 5*ay - prevAy)/6;
-		p.setVx(nextVx);
-		p.setVy(nextVy);
+		p.setX(p.getX() + p.getVx()*deltaT + (2.0/3.0)*ax*Math.pow(deltaT, 2) - (1.0/6.0)*prevAx*Math.pow(deltaT, 2));
+		p.setY(p.getY() + p.getVy()*deltaT + (2.0/3.0)*ay*Math.pow(deltaT, 2) - (1.0/6.0)*prevAy*Math.pow(deltaT, 2));
+		p.setVx(p.getVx() + deltaT*(2*nextAx + 5*ax - prevAx)/6);
+		p.setVy(p.getVy() + deltaT*(2*nextAy + 5*ay - prevAy)/6);
 		p.setPrevAx(ax);
 		p.setPrevAy(ay);
+		p.setAx(nextAx);
+		p.setAy(nextAy);
+		if(p.getY() < GOAL_Y)
+			return true;
 		return false;
 	}
 
-	private void addGranularForce(Particle i)
+	private void addGranularForce(Particle i, List<Particle> neighbors)
 	{
 		double totalFGx = 0;
 		double totalFGy = 0;
