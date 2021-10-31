@@ -9,10 +9,8 @@ for filename in all_files:
     i += 1
     print(filename)
     df = pd.read_csv(filename, sep=';')
-    print(df.head())
-    plt.plot(df['t'], df['n'], label='Simulacion' + str(i))
-plt.xlabel('t (s)')
-plt.ylabel('n(t)')
-plt.legend()
+    plt.plot(df['t'], df['n'])
+plt.xlabel('Tiempo (s)')
+plt.ylabel('Peatones evacuados')
 plt.savefig('ex-a.png')
 plt.show()
