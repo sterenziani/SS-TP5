@@ -37,27 +37,6 @@ public class SimulationSystem
 		FmapY = new HashMap<>();
 	}
 
-	public void updateValues()
-	{
-		Map<Integer, List<Particle>> neighbors = CellIndexFinder.findNeighbors(particles, height-GOAL_Y, rc);
-		for(Particle p : particles)
-		{
-			p.setPrevAx(p.getAx());
-			p.setPrevAy(p.getAy());
-			updateForces(p, neighbors);
-			double Fx = FmapX.get(p.getId());
-			double Fy = FmapY.get(p.getId());
-			double m = p.getMass();
-			p.setAx(Fx/m);
-			p.setAy(Fy/m);
-			
-			p.setVx(p.getVx() + deltaT*p.getAx());
-			p.setVy(p.getVy() + deltaT*p.getAy());
-			p.setX(p.getX() + deltaT*(p.getVx() + deltaT*p.getAx()));
-			p.setY(p.getY() + deltaT*(p.getVy() + deltaT*p.getAy()));
-		}
-	}
-
 	public void updateParticles()
 	{
 		List<Particle> removed = new ArrayList<>();
@@ -151,7 +130,10 @@ public class SimulationSystem
             			break;
             		case DOWN:
             			enx = 0.0;
-            			eny = -1.0;
+            			if(i.getY() > 0)
+                			eny = -1.0;
+            			else
+                			eny = 1.0;
             			break;
             	}
 				double fn = -kn * overlap;

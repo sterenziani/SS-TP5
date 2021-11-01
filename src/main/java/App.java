@@ -12,7 +12,7 @@ import front.Parser;
 
 public class App
 {
-	private static final int DT2 = 500;	// Cada cuanto se imprime
+	private static final int DT2 = 100;	// Cada cuanto se imprime
 	
 	public static void main(String[] args) throws IOException
 	{
@@ -30,7 +30,7 @@ public class App
 		int prevEvacuated = 0;
 		Map<Integer, Double> unloadMap = new HashMap<>();
 		SimulationSystem system = new SimulationSystem(input, deltaT);
-		system.updateValues();
+		system.updateParticles();
 		
 		unloadMap.put(0, 0.0);
 		Instant startTime = Instant.now();
