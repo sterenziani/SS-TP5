@@ -13,7 +13,7 @@ def main():
     df260 = pd.DataFrame(columns=['t', 'n'])
     df320 = pd.DataFrame(columns=['t', 'n'])
     df380 = pd.DataFrame(columns=['t', 'n'])
-    for folder in range(1,5):
+    for folder in range(1,6):
         folder_name = "./results-" +str(folder) +"/"
         #df = pd.read_csv(folder_name+"timestamps-2-200-1.2.csv", sep=';')
         df = pd.read_csv(folder_name+"timestamps-2-200-1.2.csv", sep=';')
@@ -77,7 +77,7 @@ def main():
     D = 1.2**3 + 1.8**3 + 2.4**3 + 3**3
     c = -B/(2*D)
 
-    ec = A**2 + B*c + D * c**2
+    ec = A + B*c + D * c**2
     print("c = " +str(c) +"\tE(c) = " +str(ec))
 
     Xs = []
@@ -96,10 +96,10 @@ def main():
     plt.savefig('ex-d-1.png')
     plt.show()
 
-    C = np.arange( c - 2, c + 2, 0.01 )
+    C = np.arange(c-1, c+1, 0.01)
     Ec = []
     for c_aprox in C:
-        ec = A**2 + B*c_aprox + D * c_aprox**2
+        ec = A + B*c_aprox + D * c_aprox**2
         Ec.append( ec )
     plt.plot(C, Ec)
     plt.xlabel("c  " +r'$(\frac{m^{1.5}}{s})$')
