@@ -42,13 +42,14 @@ def main():
     plt.show()
 
     # CAUDAL Q(t) = (n(t + dt) - n(t)) / dt
-    dt = 10
+    dt = 2
+    timeStep = 0.1
     timestamps = []
     Q200 = []
     Q260 = []
     Q320 = []
     Q380 = []
-    for t in range(0, int(df200['t'].max() + 1)):
+    for t in np.arange(0, int(df200['t'].max()) + 1, timeStep):
         timestamps.append(t)
         Q200.append(n(t, dt, df200))
         if(n(t, dt, df260) > 0):
@@ -61,10 +62,10 @@ def main():
     Q260 = np.nan_to_num(Q260).tolist()
     Q320 = np.nan_to_num(Q320).tolist()
     Q380 = np.nan_to_num(Q380).tolist()
-    plt.plot(timestamps, Q200, '.-', label="d = 1.2m")
-    plt.plot(timestamps[0:len(Q260)], Q260, '.-', label="d = 1.8m")
-    plt.plot(timestamps[0:len(Q320)], Q320, '.-', label="d = 2.4m")
-    plt.plot(timestamps[0:len(Q380)], Q380, '.-', label="d = 3m")
+    plt.plot(timestamps[0:len(Q200)], Q200, label="d = 1.2m")
+    plt.plot(timestamps[0:len(Q260)], Q260, label="d = 1.8m")
+    plt.plot(timestamps[0:len(Q320)], Q320, label="d = 2.4m")
+    plt.plot(timestamps[0:len(Q380)], Q380, label="d = 3m")
     plt.xlabel('Tiempo (s)')
     plt.ylabel('Caudal (1/s)')
     plt.legend()
@@ -72,6 +73,11 @@ def main():
     plt.show()
 
     # CAUDAL MEDIO
+    Q200 = Q200[int(6/timeStep) : int(50/timeStep)] # 6 a 50
+    Q260 = Q260[int(2.5/timeStep) : int(26/timeStep)] # 2.5 a 26
+    Q320 = Q320[int(3/timeStep) : int(17/timeStep)] # 3 a 17
+    Q380 = Q380[int(4/timeStep) : int(14/timeStep)] # 4 a 14
+
     A = np.array(Q200).mean()**2 + np.array(Q260).mean()**2 + np.array(Q320).mean()**2 + np.array(Q380).mean()**2
     B = (-2 * np.array(Q200).mean() * math.pow(1.2, 1.5)) + (-2 * np.array(Q260).mean() * math.pow(1.8, 1.5)) + (-2 * np.array(Q320).mean() * math.pow(2.4, 1.5)) + (-2 * np.array(Q380).mean() * math.pow(3, 1.5))
     D = 1.2**3 + 1.8**3 + 2.4**3 + 3**3
@@ -96,7 +102,7 @@ def main():
     plt.savefig('ex-d-1.png')
     plt.show()
 
-    C = np.arange(c-1, c+1, 0.01)
+    C = np.arange(c-0.25, c+0.25+0.01, 0.01)
     Ec = []
     for c_aprox in C:
         ec = A + B*c_aprox + D * c_aprox**2
