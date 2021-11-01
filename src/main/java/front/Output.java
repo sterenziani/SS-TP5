@@ -117,24 +117,24 @@ public class Output {
         }
     }
     
-    public static void outputMap(Map<Double, Integer> map, double desiredV, int N, double d)
+    public static void outputMap(Map<Integer, Double> map, double desiredV, int N, double d)
     {
     	createFolder(RESULTS_DIR);
     	DecimalFormat df = new DecimalFormat("#.#");
     	df.setMaximumFractionDigits(2);
 		String outputFileName = RESULTS_DIR + "timestamps-" +df.format(desiredV) +"-" +N +"-" +df.format(d) +".csv";
     	File file = createFile(outputFileName, "t;n");
-    	List<Entry<Double, Integer>> entries = new ArrayList<Map.Entry<Double, Integer>>(map.entrySet());
-    	Collections.sort(entries, new Comparator<Map.Entry<Double, Integer>>()
+    	List<Entry<Integer, Double>> entries = new ArrayList<Map.Entry<Integer, Double>>(map.entrySet());
+    	Collections.sort(entries, new Comparator<Map.Entry<Integer, Double>>()
 		    	{
-    		        public int compare(Entry<Double, Integer> a, Entry<Double, Integer> b)
-    		        {	return Double.compare(a.getKey(), b.getKey());	}
+    		        public int compare(Entry<Integer, Double> a, Entry<Integer, Double> b)
+    		        {	return Integer.compare(a.getKey(), b.getKey());	}
 		    	});
     	
         try (FileWriter writer = new FileWriter(file, true))
         {
-        	for(Entry<Double, Integer> e : entries)
-    			writer.write(e.getKey() +";" +e.getValue() +"\n");
+        	for(Entry<Integer, Double> e : entries)
+    			writer.write(e.getValue() +";" +e.getKey() +"\n");
         	writer.close();
         }
         catch (IOException e)

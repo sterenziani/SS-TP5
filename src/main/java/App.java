@@ -27,18 +27,21 @@ public class App
 		double desiredV = particles.get(0).getDesiredV();
 		int N = input.getN();
 		int evacuated = 0;
-		Map<Double, Integer> unloadMap = new HashMap<>();
+		int prevEvacuated = 0;
+		Map<Integer, Double> unloadMap = new HashMap<>();
 		SimulationSystem system = new SimulationSystem(input, deltaT);
 		system.updateValues();
 		
-		unloadMap.put(t, N-system.getRemainingParticles());
+		unloadMap.put(0, 0.0);
 		Instant startTime = Instant.now();
 		while(t <= 500 && system.getRemainingParticles() > 0)
 		{
 			if(N-system.getRemainingParticles() > evacuated)
 			{
 				evacuated = N-system.getRemainingParticles();
-				unloadMap.put(t, evacuated);
+				for(int i=prevEvacuated+1; i <= evacuated; i++)
+					unloadMap.put(i, t);
+				prevEvacuated = evacuated;
 			}
 			if( (int)(t/deltaT) % DT2 == 0 )
 			{
@@ -49,7 +52,7 @@ public class App
 			t += deltaT;
 		}
 		System.out.println("Finished in " +Duration.between(startTime, Instant.now()).toMinutes() +" mins");
-		unloadMap.put(t, N-system.getRemainingParticles());
+		unloadMap.put(N-system.getRemainingParticles(), t);
 		
 		if(system.getRemainingParticles() == 0)
 			System.out.println("EVERYBODY ESCAPED! t = " +t);
