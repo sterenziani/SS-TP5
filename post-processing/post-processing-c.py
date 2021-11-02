@@ -98,7 +98,7 @@ def main():
     plt.errorbar(2.4, np.array(Q320).mean(), yerr=np.array(Q320).std(), color='blue', ecolor='gray', fmt='-o', ms=4)
     plt.errorbar(3, np.array(Q380).mean(), yerr=np.array(Q380).std(), color='blue', ecolor='gray', fmt='-o', ms=4)
     plt.xlabel('Ancho de apertura (m)')
-    plt.ylabel('Caudal (1/s)')
+    plt.ylabel('<Q> (1/s)')
     plt.savefig('ex-d-1.png')
     plt.show()
 

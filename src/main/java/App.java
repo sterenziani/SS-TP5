@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import back.Particle;
@@ -26,36 +25,26 @@ public class App
 		
 		double desiredV = particles.get(0).getDesiredV();
 		int N = input.getN();
-		int evacuated = 0;
-		int prevEvacuated = 0;
-		Map<Integer, Double> unloadMap = new HashMap<>();
 		SimulationSystem system = new SimulationSystem(input, deltaT);
-		system.updateParticles();
-		
-		unloadMap.put(0, 0.0);
+		system.updateParticles(0);
 		Instant startTime = Instant.now();
 		while(t <= 500 && system.getRemainingParticles() > 0)
 		{
-			if(N-system.getRemainingParticles() > evacuated)
-			{
-				evacuated = N-system.getRemainingParticles();
-				for(int i=prevEvacuated+1; i <= evacuated; i++)
-					unloadMap.put(i, t);
-				prevEvacuated = evacuated;
-			}
 			if( (int)(t/deltaT) % DT2 == 0 )
 			{
 				Output.outputAnimationFile(particles, t, (int)(t/(deltaT*DT2)));
 				System.out.println(t);
 			}
-			system.updateParticles();
+			system.updateParticles(t);
 			t += deltaT;
 		}
+		Map<Integer, Double> unloadMap = system.getUnloadMap();
+		unloadMap.put(0, 0.0);
+		
 		System.out.println("Finished in " +Duration.between(startTime, Instant.now()).toMinutes() +" mins");
-		unloadMap.put(N-system.getRemainingParticles(), t);
 		
 		if(system.getRemainingParticles() == 0)
-			System.out.println("EVERYBODY ESCAPED! t = " +t);
+			System.out.println("EVERYBODY ESCAPED! t = " +unloadMap.get(N));
 		Output.outputMap(unloadMap, desiredV, N, input.getGapSize());
 	}
 }

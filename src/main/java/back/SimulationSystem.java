@@ -26,6 +26,9 @@ public class SimulationSystem
 	private Map<Integer, Double> FmapX;
 	private Map<Integer, Double> FmapY;
 	
+	private Map<Integer, Double> unloadMapIds = new HashMap<>();
+	private Map<Integer, Double> unloadMapAmounts = new HashMap<>();
+	
 	public SimulationSystem(Input input, double deltaT)
 	{
 		this.particles = input.getParticles();
@@ -37,7 +40,7 @@ public class SimulationSystem
 		FmapY = new HashMap<>();
 	}
 
-	public void updateParticles()
+	public void updateParticles(double t)
 	{
 		List<Particle> removed = new ArrayList<>();
 		Map<Integer, List<Particle>> neighbors = CellIndexFinder.findNeighbors(particles, height-GOAL_Y, rc);
@@ -47,8 +50,18 @@ public class SimulationSystem
 		{
 			if(beemanEvolve(p))
 				removed.add(p);
+			if(p.getY() < 0 && !unloadMapIds.containsKey(p.getId()))
+			{
+				unloadMapIds.put(p.getId(), t);
+				unloadMapAmounts.put(unloadMapIds.size(), t);
+			}
 		}
 		particles.removeAll(removed);
+	}
+	
+	public Map<Integer, Double> getUnloadMap()
+	{
+		return unloadMapAmounts;
 	}
 	
 	public void updateForces(Particle p, Map<Integer, List<Particle>> neighbors)
