@@ -13,9 +13,8 @@ def main():
     df260 = pd.DataFrame(columns=['t', 'n'])
     df320 = pd.DataFrame(columns=['t', 'n'])
     df380 = pd.DataFrame(columns=['t', 'n'])
-    for folder in range(1,6):
+    for folder in range(1, 6):
         folder_name = "./results-" +str(folder) +"/"
-        #df = pd.read_csv(folder_name+"timestamps-2-200-1.2.csv", sep=';')
         df = pd.read_csv(folder_name+"timestamps-2-200-1.2.csv", sep=';')
         df200 = pd.concat([df200, df])
         df = pd.read_csv(folder_name+"timestamps-2-260-1.8.csv", sep=';')
@@ -73,10 +72,10 @@ def main():
     plt.show()
 
     # CAUDAL MEDIO
-    Q200 = Q200[int(6/timeStep) : int(50/timeStep)] # 6 a 50
-    Q260 = Q260[int(2.5/timeStep) : int(26/timeStep)] # 2.5 a 26
-    Q320 = Q320[int(3/timeStep) : int(17/timeStep)] # 3 a 17
-    Q380 = Q380[int(4/timeStep) : int(14/timeStep)] # 4 a 14
+    Q200 = Q200[int(1/timeStep) : int(48/timeStep)]
+    Q260 = Q260[int(2/timeStep) : int(25/timeStep)]
+    Q320 = Q320[int(2/timeStep) : int(20/timeStep)]
+    Q380 = Q380[int(2/timeStep) : int(16/timeStep)]
 
     A = np.array(Q200).mean()**2 + np.array(Q260).mean()**2 + np.array(Q320).mean()**2 + np.array(Q380).mean()**2
     B = (-2 * np.array(Q200).mean() * math.pow(1.2, 1.5)) + (-2 * np.array(Q260).mean() * math.pow(1.8, 1.5)) + (-2 * np.array(Q320).mean() * math.pow(2.4, 1.5)) + (-2 * np.array(Q380).mean() * math.pow(3, 1.5))
