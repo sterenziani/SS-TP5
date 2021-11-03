@@ -50,6 +50,7 @@ public class SimulationSystem
 		{
 			if(beemanEvolve(p))
 				removed.add(p);
+			
 			if(p.getY() < 0 && !unloadMapIds.containsKey(p.getId()))
 			{
 				unloadMapIds.put(p.getId(), t);
@@ -173,15 +174,58 @@ public class SimulationSystem
 			{
 				double dx = j.getX() - i.getX();
 				double dy = j.getY() - i.getY();
-				double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+				double dist = i.getCenterDistance(j);
 				double enx = dx/dist;
 				double eny = dy/dist;
 
-				double fs = -A * Math.exp(-i.getEdgeDistance(j) / B);
+				double distanceBetweenBorders = dist -i.getRadius() -j.getRadius();
+				double fs = -A * Math.exp(-distanceBetweenBorders / B);
 				totalFSx += fs*enx;
 				totalFSy += fs*eny;
 			}
 		}
+		
+		for(Walls w : Walls.values())
+		{
+			double overlap = i.overlapWall(w, width, height, gapSize);
+			double dist = 0;
+			if(overlap > 0)
+			{
+				double enx = 0;
+				double eny = 0;
+				switch(w)
+				{
+            		case UP:
+            			enx = 0.0;
+            			eny = 1.0;
+            			dist = Math.abs(height - i.getY());
+            			break;
+            		case LEFT:
+            			enx = -1.0;
+            			eny = 0.0;
+            			dist = Math.abs(i.getX());
+            			break;
+            		case RIGHT:
+            			enx = 1.0;
+            			eny = 0.0;
+            			dist = Math.abs(width - i.getX());
+            			break;
+            		case DOWN:
+            			enx = 0.0;
+            			if(i.getY() > 0)
+                			eny = -1.0;
+            			else
+                			eny = 1.0;
+            			dist = Math.abs(i.getY());
+            			break;
+            	}
+				double distanceBetweenBorders = dist -i.getRadius();
+				double fs = -A * Math.exp(-distanceBetweenBorders / B);
+				totalFSx += fs*enx;
+				totalFSy += fs*eny;
+			}
+		}
+		
 		double currentFx = FmapX.get(i.getId());
 		double currentFy = FmapY.get(i.getId());
 		currentFx += totalFSx;
