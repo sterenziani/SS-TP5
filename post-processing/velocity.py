@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import glob
 
 all_files = []
+
 all_files.append(glob.glob("./velocity-1/*.csv"))
 all_files.append(glob.glob("./velocity-2/*.csv"))
 all_files.append(glob.glob("./velocity-3/*.csv"))
-#all_files.append(glob.glob("./velocity-4/*.csv"))
 
 final_df = pd.DataFrame(columns=['v', 't'])
 for folder in all_files:
@@ -24,7 +24,7 @@ print(final_df)
 grouped_by_v = final_df.groupby('v')
 plt.plot(grouped_by_v.groups.keys(), grouped_by_v.t.mean())
 plt.errorbar(grouped_by_v.groups.keys(), grouped_by_v.t.mean(), marker='o', yerr=grouped_by_v.t.std(), fmt='+', ecolor="grey", color="blue")
-plt.ylabel('Tiempo total de evacuacion promedio (s)')
-plt.xlabel('Velocidad')
+plt.ylabel('Tiempo de evacuacion (s)')
+plt.xlabel('Velocidad deseada (m/s)')
 plt.savefig('velocities.png')
 plt.show()
