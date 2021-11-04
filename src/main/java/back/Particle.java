@@ -32,24 +32,12 @@ public class Particle {
 		return id;
 	}
 
-    public void setId(int id) {
-		this.id = id;
-	}
-
     public double getRadius() {
 		return radius;
 	}
 
-    public void setRadius(double radius) {
-		this.radius = radius;
-	}
-
     public double getMass() {
 		return mass;
-	}
-
-    public void setMass(double mass) {
-		this.mass = mass;
 	}
 
     public double getX() {
@@ -131,14 +119,6 @@ public class Particle {
     public double getEdgeDistance(Particle p) {
         return getCenterDistance(p) - p.getRadius() - radius;
     }
-    
-    public String toString() {
-    	return "x: " +x +"\ty:" +y +"\tvx: " +vx +"\tvy: " +vy +"\tr: " +radius +"\tm:" +mass;
-    }
-
-	public double getKineticEnergy() {
-        return 0.5 * mass * Math.pow(getV(), 2); 
-	}
 	
     public double getOverlap(Particle p)
     {
