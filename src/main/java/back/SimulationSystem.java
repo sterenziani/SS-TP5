@@ -187,38 +187,37 @@ public class SimulationSystem
 		
 		for(Walls w : Walls.values())
 		{
-			double overlap = i.overlapWall(w, width, height, gapSize);
 			double dist = 0;
-			if(overlap > 0)
+			double enx = 0;
+			double eny = 0;
+			switch(w)
 			{
-				double enx = 0;
-				double eny = 0;
-				switch(w)
-				{
-            		case UP:
-            			enx = 0.0;
+        		case UP:
+        			enx = 0.0;
+        			eny = 1.0;
+        			dist = Math.abs(height - i.getY());
+        			break;
+        		case LEFT:
+        			enx = -1.0;
+        			eny = 0.0;
+        			dist = Math.abs(i.getX());
+        			break;
+        		case RIGHT:
+        			enx = 1.0;
+        			eny = 0.0;
+        			dist = Math.abs(width - i.getX());
+        			break;
+        		case DOWN:
+        			enx = 0.0;
+        			if(i.getY() > 0)
+            			eny = -1.0;
+        			else
             			eny = 1.0;
-            			dist = Math.abs(height - i.getY());
-            			break;
-            		case LEFT:
-            			enx = -1.0;
-            			eny = 0.0;
-            			dist = Math.abs(i.getX());
-            			break;
-            		case RIGHT:
-            			enx = 1.0;
-            			eny = 0.0;
-            			dist = Math.abs(width - i.getX());
-            			break;
-            		case DOWN:
-            			enx = 0.0;
-            			if(i.getY() > 0)
-                			eny = -1.0;
-            			else
-                			eny = 1.0;
-            			dist = Math.abs(i.getY());
-            			break;
-            	}
+        			dist = Math.abs(i.getY());
+        			break;
+			}
+			if(w != Walls.DOWN || i.getX() < (width-gapSize)/2 || i.getX() > (width+gapSize)/2)
+			{
 				double distanceBetweenBorders = dist -i.getRadius();
 				double fs = -A * Math.exp(-distanceBetweenBorders / B);
 				totalFSx += fs*enx;
